@@ -1,0 +1,11 @@
+{
+  "name": "techfriar/pushnotification_php",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Jesbin",
+      "email": "jesbin@techfriar.com"
+    }
+  ],
+  "require": {}
+}
