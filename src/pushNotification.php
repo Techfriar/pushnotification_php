@@ -58,9 +58,9 @@ class PushNotification
 
             if ($httpCode === 200 && isset($responseData['status']) && $responseData['status']) {
                 return $responseData['data'];
+            } else {
+                return false;
             }
-
-            return false;
         } catch (Exception $e) {
             // Log or handle the exception as needed
             throw new Exception('Failed to send notification: ' . $e->getMessage());
