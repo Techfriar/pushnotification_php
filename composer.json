@@ -7,5 +7,8 @@
       "email": "jesbin@techfriar.com"
     }
   ],
+  "autoload": {
+    "files": ["src/pushNotification.php"]
+},
   "require": {}
 }
