@@ -1,22 +1,16 @@
 <?php
-require_once './config.php';
+
 class PushNotification
 {
-    private $config;
+    private $apiUrl;
 
-    public function __construct()
+    public function __construct($containerUrl)
     {
-        $this->config = new Config();
+        $this->apiUrl = $containerUrl;
     }
 
     /**
      * Sends a push notification to specified FCM (Firebase Cloud Messaging) tokens.
-     *
-     * This method sends a notification with a given title and body to a list of FCM tokens.
-     * It makes an HTTP POST request to the API endpoint specified in the environment variables.
-     * If the request is successful and the response status indicates success, the method returns
-     * the data received from the API. If the status indicates failure, the method returns `false`.
-     * In case of an error during the request, an error is thrown.
      *
      * @param string $title - The title of the push notification.
      * @param string $body - The body content of the push notification.
@@ -28,7 +22,7 @@ class PushNotification
      */
     public function sendNotification($title, $body, $fcmTokens)
     {
-        $url = $this->config->apiUrl . '/send'; // Use the URL from the Config class
+        $url = $this->apiUrl . '/send'; // Use the URL from the Config class
 
         $data = json_encode([
             'title' => $title,
@@ -41,6 +35,7 @@ class PushNotification
             if ($ch === false) {
                 throw new Exception('Failed to initialize cURL session.');
             }
+
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -48,10 +43,12 @@ class PushNotification
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($data),
             ]);
-            $response = curl_exec($ch);
 
+            $response = curl_exec($ch);
             if ($response === false) {
-                throw new Exception('cURL Error: ' . curl_error($ch));
+                $error = curl_error($ch);
+                curl_close($ch);
+                throw new Exception('cURL Error: ' . $error);
             }
 
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
