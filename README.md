@@ -35,7 +35,11 @@ use PushNotification;
 2. **Create an instance of `PushNotification`:**
 
 ```php
-$pushNotification = new PushNotification('<Your Docker Container URL>/api'); // Docker Container URL
+ $pushNotification = new PushNotification(
+  'localhost', //(required)
+  'http', //(Optional) Default protocol : http
+   5000, //(Optional) Default port : 5000
+   );
 ```
 
 3. **Send a notification:**

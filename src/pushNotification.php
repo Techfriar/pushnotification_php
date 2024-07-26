@@ -4,9 +4,36 @@ class PushNotification
 {
     private $apiUrl;
 
-    public function __construct($containerUrl)
+    /**
+     * Constructs a new instance of the PushNotification class.
+     *
+     * This constructor initializes the PushNotification class with specified protocol,
+     * host, and port, which are used to construct the base URL of the API to send push notifications.
+     * Defaults are provided for protocol and port.
+     *
+     * @param string $host - The host of the API (e.g., "localhost" or "api.example.com").
+     * @param string $protocol - The protocol of the API (e.g., "http" or "https"). Defaults to "http".
+     * @param int $port - The port of the API (e.g., 80, 443, 3000). Defaults to 5000.
+     * @throws Exception - Throws an exception if the URL is invalid.
+     */
+    public function __construct($host, $protocol = 'http', $port = 5000)
     {
-        $this->apiUrl = $containerUrl;
+        if (empty($host)) {
+            throw new Exception('Host is required and cannot be empty.');
+        }
+        if (empty($protocol)) {
+            throw new Exception('Protocol is required and cannot be empty.');
+        }
+        if (empty($port)) {
+            throw new Exception('Port is required and cannot be empty.');
+        }
+
+        $this->apiUrl = sprintf('%s://%s:%d', $protocol, $host, $port);
+
+        // Validate the constructed URL
+        if (!filter_var($this->apiUrl, FILTER_VALIDATE_URL)) {
+            throw new Exception('Invalid URL constructed from provided protocol, host, and port.');
+        }
     }
 
     /**
@@ -22,7 +49,25 @@ class PushNotification
      */
     public function sendNotification($title, $body, $fcmTokens)
     {
-        $url = $this->apiUrl . '/send'; // Use the URL from the Config class
+
+        // Validate title
+        if (!is_string($title) || trim($title) === '') {
+            throw new Exception('Title must be a non-empty string.');
+        }
+
+        // Validate body
+        if (!is_string($body) || trim($body) === '') {
+            throw new Exception('Body must be a non-empty string.');
+        }
+
+        // Validate fcmTokens
+        if (!is_array($fcmTokens) || empty($fcmTokens) || !array_reduce($fcmTokens, function ($carry, $token) {
+            return $carry && is_string($token) && trim($token) !== '';
+        }, true)) {
+            throw new Exception('FCM tokens must be an array of non-empty strings.');
+        }
+
+        $url = $this->apiUrl . '/api/send'; // Use the URL from the Config class
 
         $data = json_encode([
             'title' => $title,
