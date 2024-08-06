@@ -48,7 +48,7 @@ class PushNotification
      *
      * @throws Exception - Throws an exception if there is an issue with the request or response.
      */
-    public function sendNotification($title, $body, $fcmTokens,$data)
+    public function sendNotification($title, $body, $fcmTokens, $data = [])
     {
 
         // Validate title
@@ -74,7 +74,7 @@ class PushNotification
             'title' => $title,
             'body' => $body,
             'fcm_tokens' => $fcmTokens,
-            'data'=> $data,
+            'data' => $data,
         ]);
 
         try {

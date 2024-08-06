@@ -48,16 +48,21 @@ use PushNotification;
  // Define the notification title and body
 $title = "Notification Title";
 $body = "Notification Body";
+$data = [
+    "offer" => "1" //(Optional)
+];
+
 
 // List of FCM tokens to send the notification to
 $fcmTokens = [];
 
 // Send the notification
-$sendNotification = $pushNotification->sendNotification($title, $body, $fcmTokens);
+$sendNotification = $pushNotification->sendNotification($title, $body, $fcmTokens,$data);
 ```
 
 - `title`: The title of the push notification.
 - `body`: The body content of the push notification.
 - `fcmTokens`: An array of FCM tokens to which the notification should be sent.
-
-The `sendNotification` method returns the data from the API response if the notification was sent successfully, or `false` if there was a failure.
+- `data` : The data object is a key-value map of custom data that you can send along with your notification.
+  This data can be used by your application to perform specific actions or display additional information when a notification is received.
+  The `sendNotification` method returns the data from the API response if the notification was sent successfully, or `false` if there was a failure.
