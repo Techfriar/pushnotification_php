@@ -42,12 +42,13 @@ class PushNotification
      * @param string $title - The title of the push notification.
      * @param string $body - The body content of the push notification.
      * @param array $fcmTokens - An array of FCM tokens to which the notification should be sent.
+     * @param Object [data={}] - An optional data object to include in the notification.
      *
      * @return mixed - Returns the data from the API response if successful, or `false` if the response indicates failure.
      *
      * @throws Exception - Throws an exception if there is an issue with the request or response.
      */
-    public function sendNotification($title, $body, $fcmTokens)
+    public function sendNotification($title, $body, $fcmTokens, $data = [])
     {
 
         // Validate title
@@ -73,6 +74,7 @@ class PushNotification
             'title' => $title,
             'body' => $body,
             'fcm_tokens' => $fcmTokens,
+            'data' => $data,
         ]);
 
         try {
